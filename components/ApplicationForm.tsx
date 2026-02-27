@@ -3,6 +3,9 @@
 import { useState } from 'react'
 import Turnstile from './Turnstile'
 
+// Turnstile site key (public, safe to hardcode)
+const TURNSTILE_SITE_KEY = '0x4AAAAAACjBvWe93PMRpj0H'
+
 interface ApplicationFormProps {
   onSubmit: (data: FormData) => Promise<void>
 }
@@ -154,7 +157,7 @@ export default function ApplicationForm({ onSubmit }: ApplicationFormProps) {
       </div>
 
       <Turnstile
-        sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+        sitekey={TURNSTILE_SITE_KEY}
         onSuccess={setTurnstileToken}
         onError={() => setError('Verification failed. Please try again.')}
       />
