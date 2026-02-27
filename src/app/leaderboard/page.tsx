@@ -3,20 +3,28 @@ import Link from 'next/link'
 import { getSupabase, LeaderboardEntry } from '@/lib/supabase'
 import LeaderboardTable from '@/components/LeaderboardTable'
 
-export const revalidate = 60 // Revalidate every 60 seconds
+// Force dynamic rendering to avoid build-time data fetching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 async function getLeaderboardData() {
-  const { data, error } = await getSupabase()
-    .from('leaderboard_view')
-    .select('*')
-    .order('total_points', { ascending: false })
+  try {
+    const { data, error } = await getSupabase()
+      .from('leaderboard_view')
+      .select('*')
+      .order('total_points', { ascending: false })
 
-  if (error) {
-    console.error('Error fetching leaderboard:', error)
+    if (error) {
+      console.error('Error fetching leaderboard:', error)
+      return []
+    }
+
+    return data as LeaderboardEntry[]
+  } catch (err) {
+    // Return empty array during build time or if Supabase is not configured
+    console.error('Failed to fetch leaderboard data:', err)
     return []
   }
-
-  return data as LeaderboardEntry[]
 }
 
 export default async function LeaderboardPage() {
