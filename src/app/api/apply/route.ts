@@ -95,7 +95,16 @@ export async function POST(request: NextRequest) {
     const cleanedHandle = igHandle.replace('@', '').toLowerCase()
     
     // Get Supabase client with service role
-    const supabase = getServiceSupabase()
+    let supabase
+    try {
+      supabase = getServiceSupabase()
+    } catch (err) {
+      console.error('Failed to initialize Supabase:', err)
+      return NextResponse.json(
+        { error: 'Database configuration error. Please try again later.' },
+        { status: 500 }
+      )
+    }
     
     // Check for duplicate
     const { data: existingRep } = await supabase
