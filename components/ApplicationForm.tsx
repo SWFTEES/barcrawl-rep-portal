@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import Turnstile from './Turnstile'
+// import Turnstile from './Turnstile'
 
-// Turnstile site key (public, safe to hardcode)
-const TURNSTILE_SITE_KEY = '0x4AAAAAACjBvWe93PMRpj0H'
+// Turnstile site key (public, safe to hardcode) - DISABLED
+// const TURNSTILE_SITE_KEY = '0x4AAAAAACjBvWe93PMRpj0H'
 
 interface ApplicationFormProps {
   onSubmit: (data: FormData) => Promise<void>
@@ -38,13 +38,11 @@ export default function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     e.preventDefault()
     setError('')
     
-    // Log for debugging
-    console.log('Turnstile token:', turnstileToken)
-    
-    if (!turnstileToken) {
-      setError('Please complete the verification. If the CAPTCHA disappeared, please refresh the page.')
-      return
-    }
+    // CAPTCHA disabled - too many issues with CSP
+    // if (!turnstileToken) {
+    //   setError('Please complete the verification. If the CAPTCHA disappeared, please refresh the page.')
+    //   return
+    // }
     
     if (formData.promoPlan.length < 50) {
       setError('Please provide more detail about how you plan to promote (at least 2-3 sentences)')
@@ -57,7 +55,7 @@ export default function ApplicationForm({ onSubmit }: ApplicationFormProps) {
       await onSubmit({
         ...formData,
         igHandle: formData.igHandle.replace('@', '').toLowerCase(),
-        turnstileToken,
+        turnstileToken: 'disabled', // CAPTCHA disabled
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong')
@@ -159,11 +157,12 @@ export default function ApplicationForm({ onSubmit }: ApplicationFormProps) {
         </select>
       </div>
 
-      <Turnstile
+      {/* CAPTCHA temporarily disabled due to CSP issues */}
+      {/* <Turnstile
         sitekey={TURNSTILE_SITE_KEY}
         onSuccess={setTurnstileToken}
         onError={() => setError('Verification failed. Please try again.')}
-      />
+      /> */}
 
       {error && (
         <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">

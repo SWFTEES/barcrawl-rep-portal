@@ -65,21 +65,28 @@ export async function POST(request: NextRequest) {
     const { fullName, phone, igHandle, university, promoPlan, prevExperience, turnstileToken } = body
     
     // Validate required fields
-    if (!fullName || !phone || !igHandle || !promoPlan || !turnstileToken) {
+    if (!fullName || !phone || !igHandle || !promoPlan) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       )
     }
     
-    // Verify Turnstile token
-    const isValid = await verifyTurnstile(turnstileToken)
-    if (!isValid) {
-      return NextResponse.json(
-        { error: 'Verification failed. Please try again.' },
-        { status: 400 }
-      )
+    // CAPTCHA verification disabled due to CSP issues
+    // Will re-enable once CSP is properly configured
+    /*
+    if (!turnstileToken || turnstileToken === 'disabled') {
+      // Skip verification for now
+    } else {
+      const isValid = await verifyTurnstile(turnstileToken)
+      if (!isValid) {
+        return NextResponse.json(
+          { error: 'Verification failed. Please try again.' },
+          { status: 400 }
+        )
+      }
     }
+    */
     
     // Increment rate limit after verification
     incrementRateLimit(ip)
