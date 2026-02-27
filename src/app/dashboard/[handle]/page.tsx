@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
-import { supabase, Rep, Sale, LeaderboardEntry } from '@/lib/supabase'
+import { getSupabase, Rep, Sale, LeaderboardEntry } from '@/lib/supabase'
 import StatsCard from '@/components/StatsCard'
 import BonusTracker from '@/components/BonusTracker'
 import CopyLinkButton from '@/components/CopyLinkButton'
@@ -11,7 +11,7 @@ interface DashboardPageProps {
 }
 
 async function getRepData(handle: string) {
-  const { data: rep, error } = await supabase
+  const { data: rep, error } = await getSupabase()
     .from('reps')
     .select('*')
     .eq('ig_handle', handle.toLowerCase())
@@ -26,7 +26,7 @@ async function getRepData(handle: string) {
 }
 
 async function getSalesData(handle: string) {
-  const { data: sales, error } = await supabase
+  const { data: sales, error } = await getSupabase()
     .from('sales')
     .select('*')
     .eq('rep_ig_handle', handle.toLowerCase())
@@ -36,7 +36,7 @@ async function getSalesData(handle: string) {
 }
 
 async function getLeaderboardPosition(handle: string) {
-  const { data: leaderboard, error } = await supabase
+  const { data: leaderboard, error } = await getSupabase()
     .from('leaderboard_view')
     .select('*')
     .order('total_points', { ascending: false })

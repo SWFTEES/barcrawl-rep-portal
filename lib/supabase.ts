@@ -1,18 +1,41 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+let publicClient: SupabaseClient | null = null
+let serviceClient: SupabaseClient | null = null
 
-// Client for public operations (browser-safe)
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-// Client for service role operations (server-side only)
-export const getServiceSupabase = () => {
-  if (!supabaseServiceRoleKey) {
-    throw new Error('Service role key not configured')
+// Get public Supabase client (lazy initialization)
+export function getSupabase() {
+  if (!publicClient) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    
+    if (!url || !key) {
+      throw new Error('Missing public Supabase environment variables')
+    }
+    
+    publicClient = createClient(url, key)
   }
-  return createClient(supabaseUrl, supabaseServiceRoleKey)
+  return publicClient
+}
+
+// Get service role Supabase client (lazy initialization)
+export function getServiceSupabase() {
+  if (!serviceClient) {
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY
+    
+    if (!url || !key) {
+      throw new Error('Missing Supabase service role environment variables')
+    }
+    
+    serviceClient = createClient(url, key)
+  }
+  return serviceClient
+}
+
+// Export a default client for backward compatibility
+export const supabase = {
+  from: (table: string) => getSupabase().from(table),
 }
 
 // Types for our database tables

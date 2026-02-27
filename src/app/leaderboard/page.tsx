@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { supabase, LeaderboardEntry } from '@/lib/supabase'
+import { getSupabase, LeaderboardEntry } from '@/lib/supabase'
 import LeaderboardTable from '@/components/LeaderboardTable'
 
 export const revalidate = 60 // Revalidate every 60 seconds
 
 async function getLeaderboardData() {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('leaderboard_view')
     .select('*')
     .order('total_points', { ascending: false })
