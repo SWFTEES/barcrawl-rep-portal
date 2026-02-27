@@ -41,10 +41,21 @@ export default function Turnstile({ sitekey, onSuccess, onError, onExpire }: Tur
 
       widgetIdRef.current = window.turnstile.render(containerRef.current, {
         sitekey,
-        callback: onSuccess,
-        'error-callback': onError,
-        'expired-callback': onExpire,
+        callback: (token: string) => {
+          console.log('Turnstile success, token received')
+          onSuccess(token)
+        },
+        'error-callback': () => {
+          console.error('Turnstile error')
+          onError?.()
+        },
+        'expired-callback': () => {
+          console.log('Turnstile expired')
+          onExpire?.()
+        },
         appearance: 'interaction-only',
+        retry: 'auto',
+        'refresh-expired': 'auto',
       })
     }
 

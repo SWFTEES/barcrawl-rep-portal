@@ -38,8 +38,11 @@ export default function ApplicationForm({ onSubmit }: ApplicationFormProps) {
     e.preventDefault()
     setError('')
     
+    // Log for debugging
+    console.log('Turnstile token:', turnstileToken)
+    
     if (!turnstileToken) {
-      setError('Please complete the verification')
+      setError('Please complete the verification. If the CAPTCHA disappeared, please refresh the page.')
       return
     }
     
