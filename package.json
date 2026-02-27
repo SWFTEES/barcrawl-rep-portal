@@ -1,5 +1,5 @@
 {
-  "name": "temp-app",
+  "name": "barcrawl-rep-portal",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,12 +10,13 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0",
+    "autoprefixer": "^10.4.27",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
+    "@tailwindcss/postcss": "^4.2.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
